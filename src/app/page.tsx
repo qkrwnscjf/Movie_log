@@ -1,46 +1,45 @@
 'use client';
-import { useMovieData } from '@/hooks/useMovieData';
-import SectionHeader from '@/components/SectionHeader';
-import DashboardSection from '@/components/DashboardSection';
-import AIRecommendation from '@/components/AIRecommendation';
 
-export default function Home() {
-  const { genreData, myReviews } = useMovieData();
+import { useMovieData } from '@/hooks/useMovieData';
+import DashboardSection from '@/components/DashboardSection';
+import PopularMovies from '@/components/PopularMovies';
+import SectionHeader from '@/components/SectionHeader';
+
+export default function HomePage() {
+  const { myReviews, genreData } = useMovieData();
 
   return (
-    <main className="min-h-screen bg-[#050505] text-gray-200 p-6 md:p-12 relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-teal-500/10 blur-[120px] rounded-full"></div>
-        <div className="absolute top-[20%] -right-[10%] w-[30%] h-[50%] bg-emerald-500/5 blur-[120px] rounded-full"></div>
-      </div>
+    <div className="space-y-12 animate-fade-in max-w-5xl mx-auto px-4">
+      {/* Welcome Header */}
+      <section className="pt-12 pb-8 border-b border-[var(--border)]">
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-[var(--text-primary)] mb-3">
+          영화 기록
+        </h1>
+        <p className="text-base text-[var(--text-secondary)] font-medium">
+          나만의 영화 아카이브를 관리하고 취향을 분석합니다.
+        </p>
+      </section>
 
-      <div className="max-w-7xl mx-auto relative z-10 space-y-16">
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-10">
-          <div>
-            <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-500 tracking-tighter uppercase mb-3">
-              Movie Insights
-            </h1>
-            <div className="flex items-center gap-4">
-              <p className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.4em]">System_Analysis_Active</p>
-              <span className="w-12 h-[1px] bg-white/10"></span>
-              <p className="text-teal-500/50 text-[10px] font-mono uppercase tracking-[0.2em]">v0.1.0_Stable</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <div className="w-2 h-2 rounded-full bg-teal-500/50"></div>
-            <div className="w-2 h-2 rounded-full bg-white/10"></div>
-            <div className="w-2 h-2 rounded-full bg-white/10"></div>
-          </div>
-        </header>
-        
-        <DashboardSection genreData={genreData} myReviews={myReviews} />
-        
-        <section className="relative">
-          <div className="absolute -left-4 top-0 w-1 h-12 bg-teal-500/50 rounded-full"></div>
-          <AIRecommendation />
-        </section>
-      </div>
-    </main>
+      {/* 실시간 인기 영화 (Top 5) */}
+      <section className="py-8">
+        <div className="flex items-center justify-between mb-8 px-1">
+          <SectionHeader title="실시간 인기 영화" type="main" />
+          <div className="hidden md:block h-[1px] flex-1 mx-8 bg-[var(--border)]"></div>
+        </div>
+        <PopularMovies />
+      </section>
+
+      {/* 구분선 */}
+      <div className="h-[1px] w-full bg-[var(--border)]"></div>
+
+      {/* 나의 기록 통계 */}
+      <section className="py-8">
+        <div className="flex items-center justify-between mb-10 px-1">
+          <SectionHeader title="나의 기록 분석" type="main" />
+          <div className="hidden md:block h-[1px] flex-1 mx-8 bg-[var(--border)]"></div>
+        </div>
+        <DashboardSection reviews={myReviews} genreData={genreData} />
+      </section>
+    </div>
   );
 }
