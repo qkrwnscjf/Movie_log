@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { X, Star, Send, Loader2 } from 'lucide-react';
 
 interface ReviewModalProps {
   movie: any;
@@ -40,55 +41,47 @@ export default function ReviewModal({ movie, onClose }: ReviewModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 backdrop-blur-2xl bg-black/80">
-      {/* Background Poster Blur */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-         <img src={`https://image.tmdb.org/t/p/original${movie.poster_path}`} className="w-full h-full object-cover scale-150 blur-[120px]" />
-      </div>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="relative w-full max-w-lg bg-[var(--bg-secondary)] rounded-3xl shadow-2xl overflow-hidden border border-[var(--border)] animate-in zoom-in-95 duration-300">
+        {/* Close Button */}
+        <button onClick={onClose} className="absolute top-5 right-5 z-10 p-2 rounded-full hover:bg-[var(--text-secondary)]/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all">
+          <X size={24} />
+        </button>
 
-      <div className="relative w-full max-w-2xl bg-white/[0.02] border border-white/10 rounded-[3rem] shadow-[0_32px_120px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in duration-500">
-        {/* Left: Poster Preview */}
-        <div className="w-full md:w-[240px] h-full bg-black/40 border-r border-white/5 relative">
-          <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-          <div className="absolute bottom-6 left-6 right-6">
-             <span className="text-[10px] font-mono text-teal-400 uppercase tracking-widest block mb-2">Analyzing_Subject</span>
-             <h3 className="text-xl font-black text-white leading-tight uppercase italic tracking-tighter">{movie.title}</h3>
-          </div>
+        {/* Header Preview */}
+        <div className="p-8 flex gap-6 items-end bg-[var(--bg-primary)]/50 border-b border-[var(--border)]">
+           <div className="w-20 h-30 rounded-xl overflow-hidden shadow-md border border-[var(--border)] flex-shrink-0">
+              <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} className="w-full h-full object-cover" />
+           </div>
+           <div className="pb-1 min-w-0">
+              <h3 className="text-xl md:text-2xl font-black text-[var(--text-primary)] leading-tight mb-2 truncate">{movie.title}</h3>
+              <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">{movie.release_date?.split('-')[0]}</p>
+           </div>
         </div>
 
-        {/* Right: Form */}
-        <form onSubmit={handleSubmit} className="flex-1 p-10 space-y-8 bg-black/20 backdrop-blur-md">
-          <div className="flex justify-between items-start">
-             <div>
-                <h2 className="text-sm font-black text-white uppercase tracking-[0.3em] mb-1">Create_Review_Log</h2>
-                <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">System_Status: Awaiting_Input</p>
-             </div>
-             <button type="button" onClick={onClose} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors text-gray-400">✕</button>
-          </div>
-          
+        {/* Form Content */}
+        <form onSubmit={handleSubmit} className="p-8 space-y-8">
           <div className="space-y-4">
             <div className="flex justify-between items-center px-1">
-              <label className="text-[10px] font-mono text-gray-400 uppercase tracking-widest italic">Rating_Indicator: {rating.toFixed(1)}</label>
-              <div className="flex gap-1">
-                 {[...Array(5)].map((_, i) => (
-                   <div key={i} className={`w-3 h-1.5 rounded-full ${i < Math.floor(rating) ? 'bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.5)]' : 'bg-white/10'}`}></div>
-                 ))}
+              <label className="text-sm font-bold text-[var(--text-primary)]">별점</label>
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-[var(--accent)]/10 rounded-full">
+                <Star size={16} className="text-[var(--accent)] fill-[var(--accent)]" />
+                <span className="text-base font-black text-[var(--accent)]">{rating.toFixed(1)}</span>
               </div>
             </div>
             <input 
               type="range" min="0" max="5" step="0.5" 
               value={rating} 
               onChange={(e) => setRating(Number(e.target.value))}
-              className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-teal-500"
+              className="w-full h-2 bg-[var(--bg-primary)] rounded-full appearance-none cursor-pointer accent-[var(--accent)]"
             />
           </div>
 
-          <div className="space-y-4">
-             <label className="text-[10px] font-mono text-gray-400 uppercase tracking-widest italic px-1">Review_Context_Buffer</label>
+          <div className="space-y-3">
+             <label className="text-sm font-bold text-[var(--text-primary)] px-1">나의 리뷰</label>
              <textarea
-              className="w-full h-40 bg-white/[0.03] border border-white/5 rounded-[2rem] p-6 text-sm text-gray-200 outline-none focus:border-teal-500/30 transition-all resize-none placeholder:text-gray-700 font-light leading-relaxed shadow-inner"
-              placeholder="Input movie analysis results here..."
+              className="w-full h-40 bg-[var(--bg-primary)] border border-[var(--border)] rounded-2xl p-5 text-base text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all resize-none placeholder:text-[var(--text-secondary)]"
+              placeholder="영화에 대한 솔직한 생각을 기록해보세요."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
@@ -98,18 +91,14 @@ export default function ReviewModal({ movie, onClose }: ReviewModalProps) {
           <button 
             type="submit" 
             disabled={loading}
-            className={`w-full h-14 rounded-2xl font-black uppercase tracking-[0.3em] text-xs transition-all duration-500 flex items-center justify-center gap-3 overflow-hidden group relative ${
-              loading ? 'bg-white/5 text-gray-600' : 'bg-teal-500 text-black shadow-[0_8px_32px_rgba(20,184,166,0.3)] hover:scale-[1.02] hover:shadow-[0_12px_48px_rgba(20,184,166,0.5)]'
-            }`}
+            className="w-full h-14 rounded-2xl bg-[var(--accent)] text-white font-bold text-lg flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shadow-lg"
           >
-            {loading ? 'Processing...' : (
+            {loading ? <Loader2 size={24} className="animate-spin" /> : (
               <>
-                <span className="relative z-10">Commit_To_Archive</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-black/20 animate-pulse relative z-10"></span>
+                기록하기
+                <Send size={20} />
               </>
             )}
-            {/* Animated Glow on hover */}
-            <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-1000 skew-x-12"></div>
           </button>
         </form>
       </div>

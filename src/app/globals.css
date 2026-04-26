@@ -1,97 +1,61 @@
 @import "tailwindcss";
 
-:root {
-  --background: #050505; 
-  --foreground: #fafafa;
-  --accent: #14b8a6;
-}
+@layer base {
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #ffffff;
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    --accent: #1a73e8;
+    --border: #f1f3f4;
+    --line-color: #e8eaed;
+    --card-shadow: 0 1px 3px rgba(60,64,67,0.1);
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --font-sans: var(--font-outfit), sans-serif;
-  --font-display: var(--font-space), sans-serif;
-  --font-mono: var(--font-mono), monospace;
+  /* .dark 클래스가 html 태그에 붙었을 때 변수 교체 */
+  :root.dark, .dark {
+    --bg-primary: #000000;
+    --bg-secondary: #121212;
+    --text-primary: #e8eaed;
+    --text-secondary: #9aa0a6;
+    --accent: #8ab4f8;
+    --border: #2c2c2c;
+    --line-color: #1f1f1f;
+    --card-shadow: none;
+  }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  letter-spacing: -0.01em;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Headline Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.03em;
+@layer base {
+  * {
+    @apply border-[var(--border)];
+  }
 }
 
-/* System/Data Typography */
-.font-mono {
-  font-family: var(--font-mono);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-size: 0.85em;
+.google-card {
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
 }
 
-/* Noise Texture Overlay */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.035;
-  z-index: 9999;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3FfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3/filter%3E%3rect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3/svg%3E");
+.google-card:hover {
+  border-color: var(--accent);
 }
 
-/* Custom Selection */
-::selection {
-  background: rgba(20, 184, 166, 0.3);
-  color: #fff;
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Smooth Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  transition: all 0.3s;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
-  box-shadow: 0 0 10px var(--accent);
-}
-
-/* Utility Animations */
-@keyframes pulse-slow {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite;
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
 }

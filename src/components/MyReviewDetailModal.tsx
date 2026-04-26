@@ -1,55 +1,48 @@
 'use client';
 
-export default function MyReviewDetailModal({ review, onClose }: any) {
+import { X, Calendar, Star, Quote } from 'lucide-react';
+
+interface DetailModalProps {
+  review: any;
+  onClose: () => void;
+}
+
+export default function MyReviewDetailModal({ review, onClose }: DetailModalProps) {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-      <div className="bg-[#0f1115] w-full max-w-xl rounded-[2.5rem] border border-teal-500/30 shadow-[0_0_50px_rgba(20,184,166,0.15)] overflow-hidden animate-in zoom-in duration-300">
-        
-        {/* 상단 장식 바 */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-transparent via-teal-500 to-transparent opacity-50"></div>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="relative w-full max-w-lg bg-[var(--bg-secondary)] rounded-3xl shadow-2xl overflow-hidden border border-[var(--border)] animate-in zoom-in-95 duration-300">
+        <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 rounded-full hover:bg-[var(--text-secondary)]/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all">
+          <X size={24} />
+        </button>
 
-        <div className="p-8">
-          <div className="flex justify-between items-start mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-1.5 h-6 bg-teal-500 rounded-full"></div>
-              <h2 className="text-sm font-black text-teal-400 tracking-[0.3em] uppercase">Review_Log_Details</h2>
+        <div className="p-8 md:p-10">
+          <div className="flex gap-6 md:gap-8 mb-8 items-center">
+            <div className="w-24 h-36 md:w-28 md:h-40 rounded-2xl overflow-hidden shadow-xl border border-[var(--border)] flex-shrink-0">
+              <img src={`https://image.tmdb.org/t/p/w500${review.poster_path}`} className="w-full h-full object-cover" />
             </div>
-            <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors text-2xl">✕</button>
-          </div>
-
-          <div className="flex gap-8 mb-10">
-            {/* 포스터 */}
-            <div className="w-32 h-48 flex-shrink-0 rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
-              <img src={`https://image.tmdb.org/t/p/w500${review.poster_path}`} className="w-full h-full object-cover" alt="" />
-            </div>
-
-            {/* 기본 정보 */}
-            <div className="flex flex-col justify-center">
-              <h3 className="text-3xl font-black text-white mb-2 tracking-tighter">{review.movie_title || review.title}</h3>
-              <div className="flex items-center gap-4">
-                <span className="text-teal-400 font-black text-xl">★ {review.rating.toFixed(1)}</span>
-                <span className="text-xs text-gray-600 font-mono uppercase tracking-widest">{new Date(review.created_at).toLocaleDateString()}</span>
+            <div className="min-w-0">
+              <h2 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] mb-4 leading-tight truncate">
+                {review.movie_title || review.title}
+              </h2>
+              <div className="flex flex-wrap items-center gap-5">
+                <div className="flex items-center gap-1.5">
+                  <Star size={18} className="text-[var(--accent)] fill-[var(--accent)]" />
+                  <span className="text-lg font-black text-[var(--accent)]">{review.rating.toFixed(1)}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                  <Calendar size={18} />
+                  <span className="text-sm font-bold">{review.watched_at}</span>
+                </div>
               </div>
-              {review.is_favorite && (
-                <span className="mt-4 px-3 py-1 bg-teal-500/10 text-teal-500 text-[10px] font-bold rounded-full border border-teal-500/20 w-fit uppercase">Favorite Record</span>
-              )}
             </div>
           </div>
 
-          {/* 리뷰 본문 (데이터 아카이브 느낌) */}
-          <div className="bg-black/40 border border-gray-800 p-6 rounded-2xl relative">
-            <span className="absolute -top-3 left-6 px-3 bg-[#0f1115] text-[10px] text-gray-500 font-mono uppercase tracking-widest">Thought_Analysis</span>
-            <p className="text-gray-300 text-lg leading-relaxed italic font-medium">
+          <div className="bg-[var(--bg-primary)] rounded-3xl p-8 border border-[var(--border)] relative shadow-inner">
+            <Quote size={32} className="text-[var(--accent)]/10 absolute top-6 left-6" />
+            <p className="text-[var(--text-primary)] leading-relaxed text-lg font-medium italic relative z-10 pt-4">
               "{review.review_text || review.content}"
             </p>
           </div>
-
-          <button 
-            onClick={onClose}
-            className="w-full mt-10 py-4 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl transition-all shadow-lg shadow-teal-900/20 uppercase tracking-widest text-xs"
-          >
-            Close_Archive
-          </button>
         </div>
       </div>
     </div>

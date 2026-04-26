@@ -1,36 +1,47 @@
 'use client';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
-// 테일 계열의 농도별 색상 배열
-const TEAL_GRADATION = ['#0d9488', '#14b8a6', '#2dd4bf', '#5eead4', '#99f6e4', '#ccfbf1'];
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+
+const COLORS = ['#0a84ff', '#30d158', '#ff9f0a', '#bf5af2', '#ff453a', '#64d2ff', '#ffd60a'];
 
 export default function GenreChart({ data }: { data: any[] }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full text-[#8e8e93] text-sm">
+        데이터가 충분하지 않습니다.
+      </div>
+    );
+  }
+
   return (
-    <div className="h-[250px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            innerRadius={65}
-            outerRadius={85}
-            paddingAngle={8}
-            dataKey="value"
-            stroke="none"
-          >
-            {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={TEAL_GRADATION[index % TEAL_GRADATION.length]} 
-                className="hover:opacity-80 outline-none transition-opacity cursor-pointer"
-              />
-            ))}
-          </Pie>
-          <Tooltip 
-            contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '12px', fontSize: '12px' }}
-            itemStyle={{ color: '#2dd4bf' }}
-          />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={data}
+          cx="50%"
+          cy="50%"
+          innerRadius={80}
+          outerRadius={110}
+          paddingAngle={5}
+          dataKey="value"
+          stroke="none"
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip
+          contentStyle={{
+            backgroundColor: '#1c1c1e',
+            border: 'none',
+            borderRadius: '12px',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+            fontSize: '12px',
+            color: '#fff'
+          }}
+          itemStyle={{ color: '#fff' }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
   );
 }
